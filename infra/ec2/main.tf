@@ -39,7 +39,8 @@ resource "aws_instance" "dev_proj_1_ec2" {
   }
 }
 
-resource "aws_key_pair" "dev_proj_1_public_key" {
-  key_name   = "jenkins_demo2"
-  public_key = var.public_key
-}
+# Key pair jenkins_demo2 already exists and is managed outside Terraform
+# resource "aws_key_pair" "dev_proj_1_public_key" {
+#   key_name   = "jenkins_demo2"
+#   public_key = var.public_key
+# }
