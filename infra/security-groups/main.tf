@@ -77,10 +77,19 @@ resource "aws_security_group" "rds_mysql_sg" {
 
 resource "aws_security_group" "ec2_sg_python_api" {
   name        = var.ec2_sg_name_for_python_api
-  description = "Enable the Port 5000 for python api"
+  description = "Enable ports for CarPrice app (3000, 5000, 5002, 5004)"
   vpc_id      = var.vpc_id
 
-  # ssh for terraform remote exec
+  # Web Application
+  ingress {
+    description = "Allow traffic on port 3000 (Web App)"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+  }
+
+  # Original port
   ingress {
     description = "Allow traffic on port 5000"
     cidr_blocks = ["0.0.0.0/0"]
@@ -89,7 +98,25 @@ resource "aws_security_group" "ec2_sg_python_api" {
     protocol    = "tcp"
   }
 
+  # Backend API
+  ingress {
+    description = "Allow traffic on port 5002 (Backend API)"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 5002
+    to_port     = 5002
+    protocol    = "tcp"
+  }
+
+  # Documentation
+  ingress {
+    description = "Allow traffic on port 5004 (Documentation)"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 5004
+    to_port     = 5004
+    protocol    = "tcp"
+  }
+
   tags = {
-    Name = "Security Groups to allow traffic on port 5000"
+    Name = "Security Groups for CarPrice app ports"
   }
 }
