@@ -38,7 +38,7 @@ module "ec2" {
 module "lb_target_group" {
   source                   = "./load-balancer-target-group"
   lb_target_group_name     = "dev-proj-1-lb-target-group"
-  lb_target_group_port     = 5000
+  lb_target_group_port     = 3000
   lb_target_group_protocol = "HTTP"
   vpc_id                   = module.networking.dev_proj_1_vpc_id
   ec2_instance_id          = module.ec2.dev_proj_1_ec2_instance_id
@@ -57,7 +57,7 @@ module "alb" {
   lb_listner_port           = 80
   lb_listner_protocol       = "HTTP"
   lb_listner_default_action = "forward"
-  lb_target_group_attachment_port = 5000
+  lb_target_group_attachment_port = 3000
 }
 
 module "rds_db_instance" {
