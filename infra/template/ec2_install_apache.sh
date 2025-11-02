@@ -14,10 +14,10 @@ source venv/bin/activate
 pip install -e .[dev] --break-system-packages || pip install -e .[dev]
 
 # Start the app directly
-nohup python3 -m flask run --host=0.0.0.0 --port=3000 > /var/log/carprice.log 2>&1 &
+nohup python3 -m flask run --host=0.0.0.0 --port=5000 > /var/log/carprice.log 2>&1 &
 
 # Wait for services to start
 sleep 30
 
 echo "Services started. Check logs: tail -f /var/log/carprice.log"
-echo "Access: http://$(curl -s ifconfig.me):3000"
+echo "Access: http://$(curl -s ifconfig.me):5000"
