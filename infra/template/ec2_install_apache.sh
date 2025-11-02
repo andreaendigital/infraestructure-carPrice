@@ -16,6 +16,8 @@ pip install -e .[dev] --break-system-packages || pip install -e .[dev]
 # Use the proper make command from root directory
 echo "Starting CarPrice app with make dev-python..."
 export SKIP_TESTS=1
+export FLASK_HOST=0.0.0.0
+export HOST=0.0.0.0
 nohup make dev-python > /var/log/carprice.log 2>&1 &
 
 # Wait for services to start
