@@ -70,26 +70,15 @@ pipeline {
                             dir('infra') {
                                 sh 'echo "=================Monitoring EC2 Setup=================="'
                                 sh '''
-                                    # Get EC2 instance ID
-                                    INSTANCE_ID=$(terraform output -raw ec2_public_ip | xargs -I {} aws ec2 describe-instances --region eu-central-1 --filters "Name=ip-address,Values={}" --query "Reservations[0].Instances[0].InstanceId" --output text)
-                                    echo "Instance ID: $INSTANCE_ID"
-                                    
-                                    # Monitor for 3 minutes
-                                    for i in {1..6}; do
-                                        echo "\n=== Check $i/6 (30s intervals) ==="
-                                        echo "Getting console output..."
-                                        aws ec2 get-console-output --instance-id $INSTANCE_ID --region eu-central-1 --output text | tail -20
-                                        
-                                        if [ $i -lt 6 ]; then
-                                            echo "Waiting 30 seconds..."
-                                            sleep 30
-                                        fi
-                                    done
-                                    
                                     echo "\n=================Setup Complete=================="
-                                    echo "Access your app at:"
-                                    echo "Direct: http://$(terraform output -raw ec2_public_ip):5000"
-                                    echo "ALB: http://$(terraform output -raw alb_dns_name)"
+                                    echo "Infrastructure deployed successfully!"
+                                    echo "\nAccess your CarPrice app at:"
+                                    echo "• Main App: http://$(terraform output -raw ec2_public_ip):3000"
+                                    echo "• Backend API: http://$(terraform output -raw ec2_public_ip):5002"
+                                    echo "• Documentation: http://$(terraform output -raw ec2_public_ip):5004/docs/"
+                                    echo "• ALB: http://$(terraform output -raw alb_dns_name)"
+                                    echo "\nNote: App may take 2-3 minutes to fully start after deployment."
+                                    echo "SSH to check logs: ssh -i ~/.ssh/jenkins_demo2 ubuntu@$(terraform output -raw ec2_public_ip)"
                                 '''
                             }
                         }
