@@ -6,14 +6,14 @@ sudo apt install -y python3 python3-pip python3-venv git make
 git clone https://github.com/andreaendigital/CarPricePredictor-Demo.git
 cd CarPricePredictor-Demo
 
-# Create virtual environment
+# Create virtual environment at root level
 python3 -m venv venv
 source venv/bin/activate
 
 # Install with --break-system-packages as fallback
 pip install -e .[dev] --break-system-packages || pip install -e .[dev]
 
-# Use the proper make command (skip tests for faster startup)
+# Use the proper make command from root directory
 echo "Starting CarPrice app with make dev-python..."
 export SKIP_TESTS=1
 nohup make dev-python > /var/log/carprice.log 2>&1 &
