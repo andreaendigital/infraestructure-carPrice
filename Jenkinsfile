@@ -62,6 +62,42 @@ pipeline {
             }
         }
 
+        stage('Monitor EC2 Setup') {
+            steps {
+                script {
+                    if (params.APPLY_TERRAFORM) {
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-crendentails-rwagh']]){
+                            dir('infra') {
+                                sh 'echo "=================Monitoring EC2 Setup=================="'
+                                sh '''
+                                    # Get EC2 instance ID
+                                    INSTANCE_ID=$(terraform output -raw ec2_public_ip | xargs -I {} aws ec2 describe-instances --region eu-central-1 --filters "Name=ip-address,Values={}" --query "Reservations[0].Instances[0].InstanceId" --output text)
+                                    echo "Instance ID: $INSTANCE_ID"
+                                    
+                                    # Monitor for 3 minutes
+                                    for i in {1..6}; do
+                                        echo "\n=== Check $i/6 (30s intervals) ==="
+                                        echo "Getting console output..."
+                                        aws ec2 get-console-output --instance-id $INSTANCE_ID --region eu-central-1 --output text | tail -20
+                                        
+                                        if [ $i -lt 6 ]; then
+                                            echo "Waiting 30 seconds..."
+                                            sleep 30
+                                        fi
+                                    done
+                                    
+                                    echo "\n=================Setup Complete=================="
+                                    echo "Access your app at:"
+                                    echo "Direct: http://$(terraform output -raw ec2_public_ip):5000"
+                                    echo "ALB: http://$(terraform output -raw alb_dns_name)"
+                                '''
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Terraform Destroy') {
             steps {
                 script {
