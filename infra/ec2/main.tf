@@ -16,6 +16,10 @@ output "dev_proj_1_ec2_instance_id" {
   value = aws_instance.dev_proj_1_ec2.id
 }
 
+output "dev_proj_1_ec2_instance_public_ip" {
+  value = aws_instance.dev_proj_1_ec2.public_ip
+}
+
 resource "aws_instance" "dev_proj_1_ec2" {
   ami           = var.ami_id
   instance_type = var.instance_type
