@@ -13,8 +13,10 @@ source venv/bin/activate
 # Install with --break-system-packages as fallback
 pip install -e .[dev] --break-system-packages || pip install -e .[dev]
 
-# Start the app directly
-nohup python3 -m flask run --host=0.0.0.0 --port=5000 > /var/log/carprice.log 2>&1 &
+# Use the proper make command (skip tests for faster startup)
+echo "Starting CarPrice app with make dev-python..."
+export SKIP_TESTS=1
+nohup make dev-python > /var/log/carprice.log 2>&1 &
 
 # Wait for services to start
 sleep 30
